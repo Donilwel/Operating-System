@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 end=$1
 if [ $end -le 0 ];
 then
