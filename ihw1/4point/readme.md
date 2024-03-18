@@ -12,7 +12,7 @@
 
 ```
 g++ main.cpp
-./a.out ../tests/test1/input1.txt input2.txt output1.txt output2.txt
+./a.out ../tests/test1/input1.txt ../tests/test1/input2.txt ../ans1/output1.txt ../ans1/output2.txt
 ```
 
 ### Схема решения задачи
