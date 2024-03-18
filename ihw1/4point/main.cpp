@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define BUFFER_SIZE 5000
-
+//4 point
 void findDifferences(char *str1, char *str2, char *output1, char *output2) {
     int ascii[256] = {0};
 
