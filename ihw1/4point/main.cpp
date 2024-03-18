@@ -8,6 +8,7 @@
 void findDifferences(char *str1, char *str2, char *output1, char *output2) {
     int ascii[256] = {0};
 
+    // Заполняем массив ascii с учетом символов из второй строки
     for (int i = 0; i < strlen(str2); i++) {
         ascii[(int)str2[i]] = 1;
     }
@@ -15,12 +16,14 @@ void findDifferences(char *str1, char *str2, char *output1, char *output2) {
     int index1 = 0;
     int index2 = 0;
 
+    // Находим символы, которых нет во второй строке
     for (int i = 0; i < strlen(str1); i++) {
         if (ascii[(int)str1[i]] == 0) {
             output1[index1++] = str1[i];
         }
     }
 
+    // Находим символы, отсутствующие в первой строке
     for (int i = 0; i < strlen(str2); i++) {
         if (ascii[(int)str2[i]] == 0) {
             output2[index2++] = str2[i];
@@ -70,6 +73,8 @@ int main(int argc, char *argv[]) {
         close(pipe1[0]);
         close(pipe2[1]);
 
+        printf("Second process finished\n");
+
         exit(0);
     } else {
         close(pipe1[0]);
@@ -96,6 +101,8 @@ int main(int argc, char *argv[]) {
         fclose(file2);
         fclose(file3);
         fclose(file4);
+
+        printf("Third process finished\n");
     }
 
     return 0;
