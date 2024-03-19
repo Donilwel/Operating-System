@@ -1,6 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -39,7 +38,6 @@ void findDifferences(char *str1, char *str2, char *output1, char *output2) {
 }
 
 int main() {
-    // Create FIFO
     mkfifo(FIFO_FILE, 0666);
 
     int fd = open(FIFO_FILE, O_RDONLY);
@@ -47,19 +45,17 @@ int main() {
     read(fd, buffer, BUFFER_SIZE);
     close(fd);
 
-    // Process the data
-    std::string data(buffer);
-
-    std::string output1, output2;
-    findDifferences(data, "", output1, output2);
+    char output1[BUFFER_SIZE];
+    char output2[BUFFER_SIZE];
+    findDifferences(buffer, "", output1, output2);
 
     int fd2 = open(FIFO_FILE, O_WRONLY);
-    write(fd2, output1.c_str(), output1.length() + 1);
+    write(fd2, output1, strlen(output1) + 1);
     close(fd2);
 
     remove(FIFO_FILE);
 
-    std::cout << "Process 2 finished" << std::endl;
+    printf("Process 2 finished\n");
 
     return 0;
 }
