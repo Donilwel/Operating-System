@@ -1,6 +1,6 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -11,39 +11,37 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " input.txt output.txt" << std::endl;
+        fprintf(stderr, "Usage: %s input.txt output.txt\n", argv[0]);
         return 1;
     }
 
-    std::string inputFileName = argv[1];
-    std::string outputFileName = argv[2];
+    char *inputFileName = argv[1];
+    char *outputFileName = argv[2];
 
-    std::ifstream inputFile(inputFileName);
+    FILE *inputFile = fopen(inputFileName, "r");
     if (!inputFile) {
-        std::cerr << "Error: Unable to open input file." << std::endl;
+        fprintf(stderr, "Error: Unable to open input file.\n");
         return 1;
     }
 
-    // Create FIFO
     mkfifo(FIFO_FILE, 0666);
 
     int fd = open(FIFO_FILE, O_WRONLY);
     char buffer[BUFFER_SIZE];
-    inputFile.read(buffer, BUFFER_SIZE);
-    write(fd, buffer, inputFile.gcount());
+    fread(buffer, 1, BUFFER_SIZE, inputFile);
+    write(fd, buffer, BUFFER_SIZE);
     close(fd);
 
-    // Wait for process2 to finish writing back to FIFO
-
     int fd2 = open(FIFO_FILE, O_RDONLY);
-    std::ofstream outputFile(outputFileName);
+    FILE *outputFile = fopen(outputFileName, "w");
     read(fd2, buffer, BUFFER_SIZE);
-    outputFile.write(buffer, strlen(buffer));
+    fwrite(buffer, 1, strlen(buffer), outputFile);
+    fclose(outputFile);
     close(fd2);
 
     remove(FIFO_FILE);
 
-    std::cout << "Process 1 finished" << std::endl;
+    printf("Process 1 finished\n");
 
     return 0;
 }
